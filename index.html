@@ -125,8 +125,8 @@
       <button class="choice-btn" onclick="enviarRespuesta('No')">No</button>
     </div>
     <div id="respuesta"></div>
-    <!-- Formulario oculto para Netlify Forms -->
-    <form name="respuesta-form" netlify netlify-honeypot="bot-field" hidden>
+    <!-- Formulario para Netlify Forms, oculto visualmente pero visible en el código fuente -->
+    <form name="respuesta-form" method="POST" data-netlify="true" style="display:none;">
       <input type="text" name="respuesta" id="respuestaInput" />
     </form>
   </div>
