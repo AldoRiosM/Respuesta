@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiero conocerte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --main-bg: linear-gradient(120deg, #fceabb 0%, #f8b500 100%);
+      --container-bg: rgba(255,255,255,0.97);
+      --primary: #f8b500;
+      --primary-hover: #e3a100;
+      --success: #1a7f37;
+      --danger: #c0392b;
+      --shadow: 0 8px 32px rgba(0,0,0,0.12);
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: var(--main-bg);
+      font-family: 'Montserrat', Arial, sans-serif;
+      color: #333;
+      box-sizing: border-box;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: var(--container-bg);
+      padding: 2rem 1.2rem;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      margin: 1.2rem;
+      transition: box-shadow 0.2s;
+    }
+    h1 {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    p {
+      font-size: 1.08rem;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      color: #222;
+    }
+    .button, .choice-btn {
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 2.2rem;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.08rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin: 0.6rem 0.4rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .button:hover, .choice-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px) scale(1.03);
+    }
+    #choices {
+      margin-top: 1.2rem;
+      display: none;
+    }
+    #respuesta {
+      margin-top: 1.5rem;
+      font-size: 1.08rem;
+      color: var(--success);
+      display: none;
+      animation: fadeIn 1s;
+      font-weight: 500;
+    }
+    #respuesta.no {
+      color: var(--danger);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (max-width: 500px) {
+      .container {
+        padding: 1.2rem 0.5rem;
+        max-width: 97vw;
+        border-radius: 14px;
+      }
+      h1 {
+        font-size: 1.35rem;
+      }
+      p, .button, .choice-btn, #respuesta {
+        font-size: 1.01rem;
+      }
+      .button, .choice-btn {
+        padding: 0.7rem 1.1rem;
+        border-radius: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Quiero conocerte</h1>
+    <p>
+      Sé que apenas hablamos y todavía no te conozco mucho, pero desde el momento en que me escribiste llamaste mi atención.<br>
+      Me gustas y me parece que eres alguien especial, por eso quiero proponerte algo sencillo: conocernos mejor.<br><br>
+      Soy directo: no pretendo jugar ni hacer perder el tiempo, me interesa alguien real y que también tenga ganas de intentarlo.<br><br>
+      Si para ti no es así, lo entenderé y no pasa nada. Pero si te interesa, me encantaría que lo intentemos y ver qué puede surgir.
+    </p>
+    <button class="button" id="mainBtn" onclick="mostrarChoices()">¿Quieres intentarlo?</button>
+    <div id="choices">
+      <button class="choice-btn" onclick="enviarRespuesta('Sí')">Sí</button>
+      <button class="choice-btn" onclick="enviarRespuesta('No')">No</button>
+    </div>
+    <div id="respuesta"></div>
+    <!-- Formulario oculto para Netlify Forms -->
+    <form name="respuesta-form" netlify netlify-honeypot="bot-field" hidden>
+      <input type="text" name="respuesta" id="respuestaInput" />
+    </form>
+  </div>
+  <script>
+    function mostrarChoices() {
+      document.getElementById('mainBtn').style.display = 'none';
+      document.getElementById('choices').style.display = 'block';
+    }
+    function enviarRespuesta(valor) {
+      document.getElementById('choices').style.display = 'none';
+      document.getElementById('respuestaInput').value = valor;
+      mostrarMensaje(valor); // Mostrar el mensaje de inmediato
+
+      // Enviar el formulario usando JS (fetch POST a Netlify)
+      const form = document.forms['respuesta-form'];
+      if (form) {
+        const data = new FormData(form);
+        fetch('/', {
+          method: 'POST',
+          body: data,
+        }).catch(()=>{
+          // Si ocurre un error, igual mostramos el mensaje
+        });
+      }
+    }
+    function mostrarMensaje(valor) {
+      const respuesta = document.getElementById('respuesta');
+      if (valor === 'Sí') {
+        respuesta.textContent = '¡Me alegra mucho que quieras intentarlo! 😊 Gracias por tu sinceridad.';
+        respuesta.className = '';
+      } else {
+        respuesta.textContent = 'Gracias por tu honestidad, lo entiendo y lo respeto. No te preocupes, todo está bien. 🙏';
+        respuesta.className = 'no';
+      }
+      respuesta.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
